@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles, Blockchain } from 'lucide-react';
+import { ArrowRight, Sparkles, Network } from 'lucide-react';
 import { FlowStatus } from './FlowStatus';
 
 const Hero = () => {
@@ -11,7 +11,7 @@ const Hero = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <div className="flex items-center justify-center mb-6">
           <div className="flex items-center space-x-2 bg-muted/50 backdrop-blur-sm rounded-full px-4 py-2 border border-border">
-            <Blockchain className="w-4 h-4 text-primary" />
+            <Network className="w-4 h-4 text-primary" />
             <span className="text-sm text-muted-foreground">Powered by Flow Blockchain</span>
           </div>
         </div>
