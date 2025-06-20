@@ -1,6 +1,6 @@
 import { Menu, X } from 'lucide-react';
 import { useState } from 'react';
-import { FlowWalletButton } from './FlowWalletButton';
+import { RainbowKitWalletButton } from './RainbowKitWalletButton';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +34,7 @@ const Navigation = () => {
           
           <div className="flex items-center space-x-4">
             <div className="hidden md:block">
-              <FlowWalletButton />
+              <RainbowKitWalletButton />
             </div>
             <div className="md:hidden">
               <button
@@ -64,7 +64,7 @@ const Navigation = () => {
               Contact
             </a>
             <div className="pt-2">
-              <FlowWalletButton />
+              <RainbowKitWalletButton />
             </div>
           </div>
         </div>

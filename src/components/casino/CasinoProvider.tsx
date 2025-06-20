@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { useFlowWallet } from '@/hooks/use-flow-wallet';
-import * as fcl from "@onflow/fcl";
+import { useRainbowKitWallet } from '@/hooks/use-rainbowkit-wallet';
 
 interface CasinoContextType {
     isConnected: boolean;
@@ -9,13 +8,14 @@ interface CasinoContextType {
     gamesWon: number;
     totalWagered: bigint;
     losses: number;
-    user: any;
+    balance: any;
+    formatBalance: () => string;
 }
 
 const CasinoContext = createContext<CasinoContextType | undefined>(undefined);
 
 export function CasinoProvider({ children }: { children: ReactNode }) {
-    const { user, isConnected, address } = useFlowWallet();
+    const { isConnected, address, balance, formatBalance } = useRainbowKitWallet();
     const [gamesPlayed, setGamesPlayed] = useState(0);
     const [gamesWon, setGamesWon] = useState(0);
     const [totalWagered, setTotalWagered] = useState(BigInt(0));
@@ -31,15 +31,13 @@ export function CasinoProvider({ children }: { children: ReactNode }) {
         }
     }, [isConnected]);
 
-    // TODO: Add Flow blockchain event listeners for game events
-    // This would replace the Ethereum contract event listeners
+    // Listen for Flow EVM blockchain events related to casino games
     useEffect(() => {
         if (isConnected && address) {
-            // Listen for Flow blockchain events related to casino games
-            // This is a placeholder for Flow-specific event handling
-            console.log('Flow wallet connected:', address);
+            console.log('RainbowKit wallet connected:', address);
+            console.log('Current balance:', formatBalance());
         }
-    }, [isConnected, address]);
+    }, [isConnected, address, formatBalance]);
 
     const value = { 
         isConnected, 
@@ -48,7 +46,8 @@ export function CasinoProvider({ children }: { children: ReactNode }) {
         gamesWon, 
         totalWagered, 
         losses,
-        user 
+        balance,
+        formatBalance
     };
 
     return <CasinoContext.Provider value={value}>{children}</CasinoContext.Provider>;

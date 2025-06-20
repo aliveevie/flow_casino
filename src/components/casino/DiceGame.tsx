@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useCasino } from "@/components/casino/CasinoProvider";
-import { useFlowWallet } from "@/hooks/use-flow-wallet";
+import { RainbowKitWalletButton } from "@/components/RainbowKitWalletButton";
 
 export function DiceGame() {
   const [selectedNumber, setSelectedNumber] = useState<number>(1);
@@ -13,11 +13,10 @@ export function DiceGame() {
   const [diceResult, setDiceResult] = useState<number | null>(null);
   
   const { isConnected } = useCasino();
-  const { connectWallet } = useFlowWallet();
 
   const handleRollDice = async () => {
     if (!isConnected) {
-      setError("Please connect your Flow wallet first");
+      setError("Please connect your wallet first");
       return;
     }
     
@@ -26,12 +25,12 @@ export function DiceGame() {
     setDiceResult(null);
     
     try {
-      // Simulate dice roll for now - in a real implementation, this would call Flow blockchain
+      // Simulate dice roll for now - in a real implementation, this would call Flow EVM blockchain
       const randomResult = Math.floor(Math.random() * 6) + 1;
       setDiceResult(randomResult);
       
-      // TODO: Implement actual Flow blockchain transaction
-      // This would involve calling a Flow smart contract
+      // TODO: Implement actual Flow EVM blockchain transaction
+      // This would involve calling a Flow EVM smart contract
       console.log(`Rolling dice with number ${selectedNumber}, bet amount: ${betAmount} FLOW`);
       
       // Simulate transaction delay
@@ -96,9 +95,9 @@ export function DiceGame() {
             {loading ? "Rolling..." : "ROLL DICE"}
           </Button>
         ) : (
-          <Button className="w-full text-lg font-bold" size="lg" onClick={connectWallet}>
-            Connect Flow Wallet
-          </Button>
+          <div className="w-full">
+            <RainbowKitWalletButton />
+          </div>
         )}
 
         {error && <p className="text-red-500 mt-2">{error}</p>}

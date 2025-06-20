@@ -1,11 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useCasino } from "./CasinoProvider";
-import { ethers } from "ethers";
 
 export function GameStats() {
     const { gamesPlayed, gamesWon, totalWagered, losses } = useCasino();
 
     const winRate = gamesPlayed > 0 ? (gamesWon / gamesPlayed) * 100 : 0;
+
+    const formatWagered = () => {
+        return `${Number(totalWagered) / 1e18} FLOW`;
+    };
 
   return (
     <Card>
@@ -29,7 +32,7 @@ export function GameStats() {
         <div className="mt-4 border-t border-gray-700 pt-4">
             <div className="flex justify-between">
                 <span>Total Wagered:</span>
-                <span>{ethers.formatEther(totalWagered)} FLOW</span>
+                <span>{formatWagered()}</span>
             </div>
             <div className="flex justify-between text-red-400">
                 <span>Losses:</span>

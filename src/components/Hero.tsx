@@ -1,8 +1,9 @@
 import { Button } from "./ui/button";
 import { useCasino } from "@/components/casino/CasinoProvider";
+import { RainbowKitWalletButton } from "./RainbowKitWalletButton";
 
 const Hero = () => {
-  const { isConnected, connect, address } = useCasino();
+  const { isConnected, address } = useCasino();
 
   return (
     <div className="text-center py-16">
@@ -16,7 +17,7 @@ const Hero = () => {
         {isConnected && address ? (
            <Button variant="secondary">Connected: {address}</Button>
         ) : (
-          <Button onClick={connect}>Connect Wallet</Button>
+          <RainbowKitWalletButton />
         )}
       </div>
     </div>
