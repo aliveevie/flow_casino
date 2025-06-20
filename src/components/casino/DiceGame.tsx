@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useCasino } from "@/components/casino/CasinoProvider";
-import { ethers } from "ethers";
+import { useFlowWallet } from "@/hooks/use-flow-wallet";
 
 export function DiceGame() {
   const [selectedNumber, setSelectedNumber] = useState<number>(1);
@@ -12,38 +12,33 @@ export function DiceGame() {
   const [error, setError] = useState<string | null>(null);
   const [diceResult, setDiceResult] = useState<number | null>(null);
   
-  const { contract, isConnected, connect } = useCasino();
-
-  useEffect(() => {
-    if(contract) {
-        const onDiceRolled = (gameId: any, player: any, guess: any, result: any, win: any, payout: any) => {
-            console.log("DiceRolled event:", { gameId, player, guess, result, win, payout });
-            setDiceResult(result);
-        };
-
-        contract.on("DiceRolled", onDiceRolled);
-
-        return () => {
-            contract.off("DiceRolled", onDiceRolled);
-        };
-    }
-  }, [contract]);
+  const { isConnected } = useCasino();
+  const { connectWallet } = useFlowWallet();
 
   const handleRollDice = async () => {
-    if (!contract) {
-      setError("Contract not connected");
+    if (!isConnected) {
+      setError("Please connect your Flow wallet first");
       return;
     }
+    
     setLoading(true);
     setError(null);
     setDiceResult(null);
+    
     try {
-      const betAmountWei = ethers.parseEther(betAmount);
-      const tx = await contract.rollDice(selectedNumber, { value: betAmountWei });
-      await tx.wait();
-      // The result will be set by the event listener
+      // Simulate dice roll for now - in a real implementation, this would call Flow blockchain
+      const randomResult = Math.floor(Math.random() * 6) + 1;
+      setDiceResult(randomResult);
+      
+      // TODO: Implement actual Flow blockchain transaction
+      // This would involve calling a Flow smart contract
+      console.log(`Rolling dice with number ${selectedNumber}, bet amount: ${betAmount} FLOW`);
+      
+      // Simulate transaction delay
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
     } catch (err: any) {
-      setError(err.message || "An error occurred.");
+      setError(err.message || "An error occurred while rolling dice.");
     } finally {
       setLoading(false);
     }
@@ -101,8 +96,8 @@ export function DiceGame() {
             {loading ? "Rolling..." : "ROLL DICE"}
           </Button>
         ) : (
-          <Button className="w-full text-lg font-bold" size="lg" onClick={connect}>
-            Connect Wallet
+          <Button className="w-full text-lg font-bold" size="lg" onClick={connectWallet}>
+            Connect Flow Wallet
           </Button>
         )}
 
