@@ -1,18 +1,23 @@
+import { Balance } from "@/components/casino/Balance";
+import { DiceGame } from "@/components/casino/DiceGame";
+import { GameStats } from "@/components/casino/GameStats";
+import { HowToPlay } from "@/components/casino/HowToPlay";
+import { QuickActions } from "@/components/casino/QuickActions";
 
-import Navigation from "@/components/Navigation";
-import Hero from "@/components/Hero";
-import Features from "@/components/Features";
-import Footer from "@/components/Footer";
-
-const Index = () => {
+export default function Index() {
   return (
-    <div className="min-h-screen">
-      <Navigation />
-      <Hero />
-      <Features />
-      <Footer />
+    <div className="container mx-auto px-4 py-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
+          <DiceGame />
+        </div>
+        <div className="space-y-8">
+          <Balance />
+          <GameStats />
+          <QuickActions />
+          <HowToPlay />
+        </div>
+      </div>
     </div>
   );
-};
-
-export default Index;
+}

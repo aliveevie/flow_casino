@@ -6,23 +6,29 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { FlowProvider } from "@/components/FlowProvider";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import { CasinoProvider } from "./components/casino/CasinoProvider";
+import Navigation from "./components/Navigation";
+import Hero from "./components/Hero";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <FlowProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+        <TooltipProvider>
+          <CasinoProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Navigation />
+              <Hero />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </CasinoProvider>
+        </TooltipProvider>
     </FlowProvider>
   </QueryClientProvider>
 );
