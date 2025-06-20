@@ -46,6 +46,13 @@ export function CasinoProvider({ children }: { children: ReactNode }) {
                 const casinoContract = new ethers.Contract(contractAddress, contractABI, signer);
                 setContract(casinoContract);
                 setIsConnected(true);
+            } else {
+                // This will reset the state if the user disconnects all accounts
+                setIsConnected(false);
+                setAddress(null);
+                setSigner(null);
+                setContract(null);
+                setProvider(null);
             }
         }
     };
@@ -53,7 +60,25 @@ export function CasinoProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         setupEthers();
         if (window.ethereum) {
-            window.ethereum.on('accountsChanged', () => window.location.reload());
+            const handleAccountsChanged = (accounts: string[]) => {
+                if (accounts.length === 0) {
+                  // User disconnected
+                  setIsConnected(false);
+                  setAddress(null);
+                  setSigner(null);
+                  setContract(null);
+                  setProvider(null);
+                }
+                setupEthers();
+            };
+
+            window.ethereum.on('accountsChanged', handleAccountsChanged);
+
+            return () => {
+                if (window.ethereum.removeListener) {
+                    window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+                }
+            }
         }
     }, []);
     
