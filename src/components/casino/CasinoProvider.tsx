@@ -1,9 +1,16 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRainbowKitWallet } from '@/hooks/use-rainbowkit-wallet';
 import { useReadContract } from 'wagmi';
+import { createPublicClient, http, Abi } from 'viem';
 import { flowCasinoAddress, flowCasinoAbi } from '@/lib/flow-casino';
 import { formatEther } from 'ethers';
-import { Abi } from 'viem';
+
+interface GameHistoryEntry {
+    gameId: number;
+    betAmount: bigint;
+    win: boolean;
+    payout: bigint;
+}
 
 interface CasinoContextType {
     isConnected: boolean;
@@ -17,6 +24,8 @@ interface CasinoContextType {
     balance: any;
     formatBalance: () => string;
     refetchStats: () => void;
+    isOwner: boolean;
+    gameHistory: GameHistoryEntry[];
 }
 
 const CasinoContext = createContext<CasinoContextType | undefined>(undefined);
@@ -28,6 +37,80 @@ export function CasinoProvider({ children }: { children: ReactNode }) {
     const [totalWagered, setTotalWagered] = useState("0");
     const [totalWon, setTotalWon] = useState("0");
     const [losses, setLosses] = useState(0);
+    const [isOwner, setIsOwner] = useState(false);
+    const [gameHistory, setGameHistory] = useState<GameHistoryEntry[]>([]);
+
+    useEffect(() => {
+        const fetchHistory = async () => {
+            if (!address || !chain) return;
+
+            const publicClient = createPublicClient({
+                chain: chain,
+                transport: http()
+            });
+
+            const gameStartedLogs = await publicClient.getLogs({
+                address: flowCasinoAddress as `0x${string}`,
+                event: {
+                    type: 'event',
+                    name: 'GameStarted',
+                    inputs: [
+                        { type: 'uint256', name: 'gameId', indexed: true },
+                        { type: 'address', name: 'player', indexed: true },
+                        { type: 'uint8', name: 'gameType' },
+                        { type: 'uint256', name: 'betAmount' },
+                        { type: 'uint256', name: 'timestamp' },
+                    ],
+                },
+                args: {
+                    player: address,
+                },
+                fromBlock: 0n,
+                toBlock: 'latest'
+            });
+
+            const betAmounts = new Map<number, bigint>();
+            for (const log of gameStartedLogs) {
+                const { gameId, betAmount } = (log as any).args;
+                betAmounts.set(Number(gameId), betAmount);
+            }
+
+            const diceRolledLogs = await publicClient.getLogs({
+                address: flowCasinoAddress as `0x${string}`,
+                event: {
+                    type: 'event',
+                    name: 'DiceRolled',
+                    inputs: [
+                        { type: 'uint256', name: 'gameId', indexed: true },
+                        { type: 'address', name: 'player', indexed: true },
+                        { type: 'uint8', name: 'guess' },
+                        { type: 'uint8', name: 'result' },
+                        { type: 'bool', name: 'win' },
+                        { type: 'uint256', name: 'payout' },
+                    ],
+                },
+                args: {
+                    player: address,
+                },
+                fromBlock: 0n,
+                toBlock: 'latest'
+            });
+
+            const newHistory = diceRolledLogs.map(log => {
+                const { gameId, win, payout } = (log as any).args;
+                const betAmount = betAmounts.get(Number(gameId));
+                return { gameId: Number(gameId), betAmount, win, payout };
+            }).filter(game => game.betAmount !== undefined)
+              .reverse();
+
+            setGameHistory(newHistory as GameHistoryEntry[]);
+        }
+        
+        if(isConnected && address && chain) {
+            fetchHistory();
+        }
+
+    }, [isConnected, address, chain]);
 
     const { data: playerStats, refetch: refetchStats } = useReadContract({
         address: flowCasinoAddress as `0x${string}`,
@@ -79,7 +162,9 @@ export function CasinoProvider({ children }: { children: ReactNode }) {
         losses,
         balance,
         formatBalance,
-        refetchStats
+        refetchStats,
+        isOwner,
+        gameHistory
     };
 
     return <CasinoContext.Provider value={value}>{children}</CasinoContext.Provider>;

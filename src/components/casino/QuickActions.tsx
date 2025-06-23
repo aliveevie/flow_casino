@@ -7,10 +7,11 @@ export function QuickActions() {
       <CardHeader>
         <CardTitle>Quick Actions</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col space-y-2">
-        <Button variant="outline">Deposit FLOW</Button>
-        <Button variant="outline">Withdraw</Button>
-        <Button variant="outline">Game History</Button>
+      <CardContent className="grid grid-cols-1 gap-2">
+        <Button variant="outline" disabled>Game History</Button>
+        <p className="text-xs text-muted-foreground text-center pt-2">
+          Deposit and Withdraw are handled automatically with each bet.
+        </p>
       </CardContent>
     </Card>
   );

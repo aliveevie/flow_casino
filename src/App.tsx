@@ -1,29 +1,36 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import { Toaster } from "@/components/ui/sonner";
+import { FlowProvider } from "@/components/FlowProvider";
 import { RainbowKitProvider } from "@/components/RainbowKitProvider";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
 import { CasinoProvider } from "./components/casino/CasinoProvider";
-import Hero from "./components/Hero";
+import { Index } from "@/pages/Index";
+import NotFound from "@/pages/NotFound";
+import Navigation from "./components/Navigation";
+import Footer from "./components/Footer";
+import "./App.css";
 
-const App = () => (
-  <RainbowKitProvider>
-    <TooltipProvider>
-      <CasinoProvider>
+function App() {
+  return (
+    <FlowProvider>
+      <RainbowKitProvider>
         <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Hero />
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </CasinoProvider>
-    </TooltipProvider>
-  </RainbowKitProvider>
-);
+        <CasinoProvider>
+          <Router>
+            <div className="flex flex-col min-h-screen">
+              <Navigation />
+              <main className="flex-grow">
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </main>
+              <Footer />
+            </div>
+          </Router>
+        </CasinoProvider>
+      </RainbowKitProvider>
+    </FlowProvider>
+  );
+}
 
 export default App;
