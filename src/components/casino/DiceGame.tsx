@@ -6,7 +6,7 @@ import { useCasino } from "@/components/casino/CasinoProvider";
 import { RainbowKitWalletButton } from "@/components/RainbowKitWalletButton";
 import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { flowCasinoAddress, flowCasinoAbi } from "@/lib/flow-casino";
-import { parseEther } from "ethers";
+import { parseEther, formatEther } from "ethers";
 import { decodeEventLog, Abi } from "viem";
 import { toast } from "sonner";
 
@@ -66,11 +66,19 @@ export function DiceGame() {
             decodedLog.eventName === "DiceRolled" &&
             (decodedLog.args as any).player === address
           ) {
-            const result = (decodedLog.args as any).result;
+            const { result, win, payout } = decodedLog.args as any;
             setDiceResult(result);
-            toast.success(`You rolled a ${result}!`, {
-              id: 'dice-roll'
-            });
+
+            if (win) {
+                const payoutInFlow = formatEther(payout);
+                toast.success(`You won! ${payoutInFlow} FLOW has been sent to your wallet.`, {
+                    id: "dice-roll",
+                });
+            } else {
+                toast.error("You lost this round. Better luck next time!", {
+                    id: "dice-roll",
+                });
+            }
           }
         } catch (error) {
           // This log might not be from our contract, so we can ignore the error
