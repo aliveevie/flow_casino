@@ -39,7 +39,7 @@ const Dice = ({ result, rolling }: { result: number | null, rolling: boolean }) 
     
 
     return (
-        <div className="flex justify-center items-center perspective-[800px] w-24 h-24 mx-auto my-8">
+        <div className="flex justify-center items-center perspective-[800px] w-24 h-24 mx-auto my-4">
             <div
                 className={cn("relative w-24 h-24 transition-transform duration-1000", { "animate-dice-roll": rolling })}
                 style={{ transformStyle: "preserve-3d", transform: getResultTransform(result) }}
@@ -110,10 +110,12 @@ export function DiceGame() {
 
                     if (decodedLog.eventName === "DiceRolled" && (decodedLog.args as any).player === address) {
                         const { result, win, payout } = decodedLog.args as any;
-                        setDiceResult(result);
                         setRolling(false);
-                        setWinInfo({ win, payout: formatEther(payout) });
-                        setShowResultModal(true);
+                        setTimeout(() => {
+                            setDiceResult(result);
+                            setWinInfo({ win, payout: formatEther(payout) });
+                            setShowResultModal(true);
+                        }, 1000); // Delay to show final dice face
 
                         toast[win ? 'success' : 'error'](
                             win ? `You won! ${formatEther(payout)} FLOW has been sent to your wallet.` : "You lost this round. Better luck next time!",
@@ -137,15 +139,15 @@ export function DiceGame() {
     return (
         <Card className="w-full max-w-md bg-gray-900 text-white border-gray-700">
             <CardHeader>
-                <CardTitle className="text-center text-3xl font-bold">
+                <CardTitle className="text-center text-2xl font-bold">
                     <span role="img" aria-label="dice" className="mr-2">🎲</span> Dice Roll Game
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <Dice result={diceResult} rolling={rolling} />
+                <Dice result={diceResult} rolling={rolling || isLoading} />
 
-                <div className="mb-6">
-                    <p className="text-center font-medium mb-3">Choose Your Number (1-6)</p>
+                <div className="mb-4">
+                    <p className="text-center font-medium mb-2">Choose your expectations</p>
                     <div className="grid grid-cols-6 gap-2">
                         {[1, 2, 3, 4, 5, 6].map((num) => (
                             <Button
@@ -161,8 +163,8 @@ export function DiceGame() {
                     </div>
                 </div>
 
-                <div className="mb-6">
-                    <p className="text-center font-medium mb-3">Bet Amount (FLOW)</p>
+                <div className="mb-4">
+                    <p className="text-center font-medium mb-2">Bet Amount (FLOW)</p>
                     <div className="grid grid-cols-3 gap-2">
                         {["0.01", "0.05", "0.1"].map((amount) => (
                             <Button
@@ -188,7 +190,7 @@ export function DiceGame() {
                     </div>
                 )}
 
-                <div className="flex justify-between text-sm mt-4 text-gray-400">
+                <div className="flex justify-between text-sm mt-2 text-gray-400">
                     <span>Payout (6x): <span className="font-bold text-green-400">{parseFloat(betAmount) * 6} FLOW</span></span>
                     <span>House Edge: <span className="font-bold">2.5%</span></span>
                 </div>

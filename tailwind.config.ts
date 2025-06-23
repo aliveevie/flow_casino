@@ -93,7 +93,7 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'dice-roll': 'roll 2s ease-out',
+				'dice-roll': 'roll 2s ease-out infinite',
 			}
 		}
 	},
