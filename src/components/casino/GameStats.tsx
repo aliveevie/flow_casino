@@ -1,42 +1,43 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useCasino } from "./CasinoProvider";
+import { useCasino } from "@/components/casino/CasinoProvider";
+import { Button } from "@/components/ui/button";
 
 export function GameStats() {
-    const { gamesPlayed, gamesWon, totalWagered, losses } = useCasino();
+  const { gamesPlayed, gamesWon, totalWagered, totalWon, losses, refetchStats } = useCasino();
 
-    const winRate = gamesPlayed > 0 ? (gamesWon / gamesPlayed) * 100 : 0;
-
-    const formatWagered = () => {
-        return `${Number(totalWagered) / 1e18} FLOW`;
-    };
+  const winRate = gamesPlayed > 0 ? ((gamesWon / gamesPlayed) * 100).toFixed(2) : "0.00";
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Game Statistics</CardTitle>
+      <CardHeader className="flex flex-row items-center justify-between pb-2">
+        <CardTitle className="text-sm font-medium">Game Stats</CardTitle>
+        <Button variant="ghost" size="sm" onClick={refetchStats}>Refresh</Button>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 gap-4 text-center">
-          <div>
-            <p className="text-2xl font-bold">{gamesPlayed}</p>
-            <p className="text-gray-400">Games Played</p>
-          </div>
-          <div>
-            <p className="text-2xl font-bold">{gamesWon}</p>
-            <p className="text-gray-400">Games Won</p>
-          </div>
-        </div>
-        <div className="mt-4 text-center">
-            <p className="text-lg">Win Rate: <span className="font-bold text-green-400">{winRate.toFixed(1)}%</span></p>
-        </div>
-        <div className="mt-4 border-t border-gray-700 pt-4">
-            <div className="flex justify-between">
-                <span>Total Wagered:</span>
-                <span>{formatWagered()}</span>
+        <div className="grid grid-cols-2 gap-4">
+            <div className="text-center">
+                <p className="text-xs text-muted-foreground">Games Played</p>
+                <p className="text-2xl font-bold">{gamesPlayed}</p>
             </div>
-            <div className="flex justify-between text-red-400">
-                <span>Losses:</span>
-                <span>{losses}</span>
+            <div className="text-center">
+                <p className="text-xs text-muted-foreground">Games Won</p>
+                <p className="text-2xl font-bold">{gamesWon}</p>
+            </div>
+            <div className="text-center">
+                <p className="text-xs text-muted-foreground">Games Lost</p>
+                <p className="text-2xl font-bold">{losses}</p>
+            </div>
+            <div className="text-center">
+                <p className="text-xs text-muted-foreground">Win Rate</p>
+                <p className="text-2xl font-bold">{winRate}%</p>
+            </div>
+            <div className="text-center col-span-2">
+                <p className="text-xs text-muted-foreground">Total Wagered</p>
+                <p className="text-2xl font-bold">{totalWagered} FLOW</p>
+            </div>
+            <div className="text-center col-span-2">
+                <p className="text-xs text-muted-foreground">Total Won</p>
+                <p className="text-2xl font-bold text-green-400">{totalWon} FLOW</p>
             </div>
         </div>
       </CardContent>

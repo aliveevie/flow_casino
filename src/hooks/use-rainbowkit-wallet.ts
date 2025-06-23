@@ -2,7 +2,7 @@ import { useAccount, useBalance, useChainId } from 'wagmi';
 import { useCallback } from 'react';
 
 export const useRainbowKitWallet = () => {
-  const { address, isConnected, isConnecting } = useAccount();
+  const { address, isConnected, isConnecting, chain } = useAccount();
   const chainId = useChainId();
   
   const { data: balance } = useBalance({
@@ -24,6 +24,7 @@ export const useRainbowKitWallet = () => {
     isConnected,
     isConnecting,
     chainId,
+    chain,
     balance,
     formatBalance,
     getDisplayAddress,
