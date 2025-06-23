@@ -9,7 +9,7 @@ export function GameHistory() {
     const { gameHistory } = useCasino();
 
     return (
-        <Card className="bg-gray-900 text-white border-gray-700">
+        <Card className="w-full max-w-md bg-gray-900 text-white border-gray-700">
             <CardHeader>
                 <CardTitle className="text-lg font-medium">Game History</CardTitle>
             </CardHeader>

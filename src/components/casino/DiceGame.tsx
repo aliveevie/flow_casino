@@ -153,7 +153,7 @@ export function DiceGame() {
                             <Button
                                 key={num}
                                 variant={selectedNumber === num ? "secondary" : "outline"}
-                                className={cn("border-gray-600 hover:bg-gray-700", { "bg-purple-600 text-white": selectedNumber === num })}
+                                className={cn("border-gray-600 hover:bg-gray-700 text-lg font-semibold", { "bg-purple-600 text-white": selectedNumber === num })}
                                 onClick={() => setSelectedNumber(num)}
                                 disabled={!isConnected || isLoading}
                             >
@@ -170,7 +170,7 @@ export function DiceGame() {
                             <Button
                                 key={amount}
                                 variant={betAmount === amount ? "secondary" : "outline"}
-                                className={cn("border-gray-600 hover:bg-gray-700", { "bg-purple-600 text-white": betAmount === amount })}
+                                className={cn("border-gray-600 hover:bg-gray-700 text-lg font-semibold", { "bg-purple-600 text-white": betAmount === amount })}
                                 onClick={() => setBetAmount(amount)}
                                 disabled={!isConnected || isLoading}
                             >
