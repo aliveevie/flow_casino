@@ -84,11 +84,16 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				roll: {
+					'0%': { transform: 'rotateX(0deg) rotateY(0deg)' },
+					'100%': { transform: 'rotateX(1440deg) rotateY(1440deg)' },
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'dice-roll': 'roll 2s ease-out',
 			}
 		}
 	},
