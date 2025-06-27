@@ -1,0 +1,14 @@
+{
+  "name": "Flow Casino",
+  "tagline": "A decentralized dice casino game powered by Flow blockchain with provably fair gaming",
+  "description": "Flow Casino is a decentralized dice betting game built on the Flow blockchain that allows players to place bets on dice roll outcomes with complete transparency and fairness. The game leverages Flow's native VRF (Verifiable Random Function) to ensure provably fair random number generation, while smart contracts handle all betting logic and payouts automatically. Built with React and TypeScript, the application features a modern UI with real-time game statistics, betting history, and seamless wallet integration through both Flow wallets and EVM-compatible wallets via RainbowKit. The platform combines the excitement of traditional casino gaming with the security and transparency of blockchain technology.",
+  "team": [
+    {
+      "name": "Ibrahim Abdulkarim",
+      "email": "aliveibi080@gmail.com"
+    }
+  ],
+  "demo_url": "https://flowcasino.vercel.app/",
+  "video_url": "https://github.com/aliveevie/flow_casino",
+  "technologies": ["React", "Ethers.js", "Flow EVM", "Flow Solidity VRF"]
+} 
